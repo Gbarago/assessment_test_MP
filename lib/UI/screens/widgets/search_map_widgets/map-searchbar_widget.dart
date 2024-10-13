@@ -9,52 +9,57 @@ class MapSearchBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: 49,
-      // context.sizeHeight(0.06),
-      left: 30,
-      height: 80,
-      width: context.sizeWidth(0.9),
-      child: Row(
-        children: [
-          Flexible(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(40),
-              child: TextFormField(
-                controller: TextEditingController(text: 'Saint Petersburg'),
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colorScheme.onSurface,
+    return Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 40.0),
+          child: Container(
+            height: 80,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40),
+                    child: TextFormField(
+                      controller:
+                          TextEditingController(text: 'Saint Petersburg'),
+                      style: context.textTheme.titleSmall?.copyWith(
+                        color: context.colorScheme.onSurface,
+                      ),
+                      decoration: InputDecoration(
+                        fillColor: context.colorScheme.surface,
+                        filled: true,
+                        prefixIcon: SvgPicture.asset(
+                          ImagesPaths.search2,
+                        ).padOnly(left: 5),
+                        prefixIconConstraints: const BoxConstraints(
+                          minWidth: 45,
+                          minHeight: 30,
+                        ),
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        focusedErrorBorder: InputBorder.none,
+                      ),
+                    ),
+                  ).scale(animationDuration: 1200.ms, delay: 200.ms),
                 ),
-                decoration: InputDecoration(
-                  fillColor: context.colorScheme.surface,
-                  filled: true,
-                  prefixIcon: SvgPicture.asset(
-                    ImagesPaths.search2,
-                  ).padOnly(left: 5),
-                  prefixIconConstraints: const BoxConstraints(
-                    minWidth: 45,
-                    minHeight: 30,
+                SizedBox(width: 12),
+                CircleAvatar(
+                  backgroundColor: context.colorScheme.surface,
+                  foregroundColor: context.colorScheme.onSurface,
+                  child: SvgPicture.asset(
+                    ImagesPaths.filter,
+                    height: 18,
                   ),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  focusedErrorBorder: InputBorder.none,
-                ),
-              ),
-            ).scale(animationDuration: 1200.ms, delay: 200.ms),
-          ),
-          CircleAvatar(
-            backgroundColor: context.colorScheme.surface,
-            foregroundColor: context.colorScheme.onSurface,
-            child: SvgPicture.asset(
-              ImagesPaths.filter,
-              height: 18,
+                ).scale(animationDuration: 1210.ms, delay: 200.ms),
+              ].rowInPadding(1),
             ),
-          ).scale(animationDuration: 1210.ms, delay: 200.ms),
-        ].rowInPadding(10),
-      ),
-    );
+          ),
+        ));
   }
 }

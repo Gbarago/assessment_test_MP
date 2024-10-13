@@ -1,14 +1,10 @@
-// import 'package:flutter/material.dart';
-// import 'package:real_estate_abiodun/UI/home_screen.dart';
-
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:real_estate_abiodun/UI/screens/home_screen.dart';
 import 'package:real_estate_abiodun/UI/screens/other.dart';
-import 'package:real_estate_abiodun/UI/screens/search_screen.dart'; // Import animations package
+import 'package:real_estate_abiodun/UI/screens/search_screen.dart';
 
 class FloatingNavBarWithTabs extends StatefulWidget {
-  const FloatingNavBarWithTabs({super.key});
+  const FloatingNavBarWithTabs({Key? key}) : super(key: key);
 
   @override
   _FloatingNavBarWithTabsState createState() => _FloatingNavBarWithTabsState();
@@ -19,8 +15,8 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
   late TabController _tabController;
   int _currentIndex = 0;
 
-  late AnimationController _animationController;
-  late Animation<Offset> _slideAnimation;
+  late AnimationController _navBarAnimationController;
+  late Animation<Offset> _navBarSlideAnimation;
 
   @override
   void initState() {
@@ -35,31 +31,33 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
       });
     });
 
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+    // Animation Controller for the Nav Bar sliding from bottom
+    _navBarAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 600), // Duration for the slide
       vsync: this,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 1.3), // Start from bottom
-      end: const Offset(0.0, 0.0), // Slide to the position
+    // Slide from bottom to its position
+    _navBarSlideAnimation = Tween<Offset>(
+      begin: const Offset(0, 2), // Start from below the screen
+      end: const Offset(0, 0), // End at normal position
     ).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _navBarAnimationController,
       curve: Curves.easeInOut,
     ));
-    startAnimation();
-    // Start the animation
+
+    _startNavBarSlideAnimation(); // Start the nav bar sliding in
   }
 
-  void startAnimation() async {
-    await Future.delayed(const Duration(milliseconds: 2000));
-    _animationController.forward();
+  void _startNavBarSlideAnimation() async {
+    await Future.delayed(Duration(seconds: 4));
+    _navBarAnimationController.forward(from: 0.0); // Start the animation
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    _animationController.dispose();
+    _navBarAnimationController.dispose();
     super.dispose();
   }
 
@@ -71,37 +69,24 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          PageTransitionSwitcher(
-            duration: const Duration(milliseconds: 300),
-            reverse: _tabController.index < _currentIndex,
-            transitionBuilder: (Widget child,
-                Animation<double> primaryAnimation,
-                Animation<double> secondaryAnimation) {
-              return FadeThroughTransition(
-                animation: primaryAnimation,
-                secondaryAnimation: secondaryAnimation,
-                child: child,
-              );
-            },
-            child: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
-              key: ValueKey<int>(_tabController.index),
-              controller: _tabController,
-              children: const [
-                SearchScreenTab(),
-                ChatScreen(),
-                HomePageTab(),
-                SizedBox(),
-                ProfileScreen(),
-              ],
-            ),
+          // Tab content with no slide (just fade or no animation)
+          TabBarView(
+            physics: const NeverScrollableScrollPhysics(), // Disable swipe
+            key: ValueKey<int>(_tabController.index),
+            controller: _tabController,
+            children: const [
+              SearchScreenTab(),
+              ChatScreen(),
+              HomePageTab(),
+              SizedBox(),
+              ProfileScreen(),
+            ],
           ),
           Align(
             alignment: const Alignment(0, 0.97),
-
-            //  alignment: Alignment.bottomCenter,
             child: SlideTransition(
-              position: _slideAnimation,
+              position:
+                  _navBarSlideAnimation, // Apply slide animation to nav bar
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 70),
                 decoration: BoxDecoration(
@@ -115,116 +100,129 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
                   labelPadding: EdgeInsets.zero,
                   indicatorPadding: EdgeInsets.zero,
                   tabs: [
-                    Tab(
-                        icon: Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _tabController.index == 0
-                              ? _theme.primaryColor
-                              : null),
-                      child: Container(
-                          width: 25,
-                          height: 25,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _tabController.index != 0
-                                  ? _theme.colorScheme.secondary
-                                  : null),
-                          child: Icon(Icons.search_sharp,
-                              color: _theme.iconTheme.color)),
-                    )),
-                    Tab(
-                        icon: Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _tabController.index == 1
-                              ? _theme.primaryColor
-                              : null),
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _tabController.index != 1
-                                ? _theme.colorScheme.secondary
-                                : null),
-                        child: Icon(Icons.chat_bubble,
-                            color: _theme.iconTheme.color),
-                      ),
-                    )),
-                    Tab(
-                      icon: Container(
-                          width: 38,
-                          height: 38,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _tabController.index == 2
-                                  ? _theme.primaryColor
-                                  : null),
-                          child: Container(
-                            width: 25,
-                            height: 25,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _tabController.index != 2
-                                    ? _theme.colorScheme.secondary
-                                    : null),
-                            child:
-                                Icon(Icons.home, color: _theme.iconTheme.color),
-                          )),
+                    _buildTab(
+                      icon: Icons.search_sharp,
+                      index: 0,
+                      theme: _theme,
                     ),
-                    Tab(
-                        icon: Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _tabController.index == 3
-                              ? _theme.primaryColor
-                              : null),
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _tabController.index != 3
-                                ? _theme.colorScheme.secondary
-                                : null),
-                        child:
-                            Icon(Icons.favorite, color: _theme.iconTheme.color),
-                      ),
-                    )),
-                    Tab(
-                        icon: Container(
-                      width: 38,
-                      height: 38,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _tabController.index == 4
-                              ? _theme.primaryColor
-                              : null),
-                      child: Container(
-                        width: 25,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _tabController.index != 4
-                                ? _theme.colorScheme.secondary
-                                : null),
-                        child:
-                            Icon(Icons.person, color: _theme.iconTheme.color),
-                      ),
-                    )),
+                    _buildTab(
+                      icon: Icons.chat_bubble,
+                      index: 1,
+                      theme: _theme,
+                    ),
+                    _buildTab(
+                      icon: Icons.home,
+                      index: 2,
+                      theme: _theme,
+                    ),
+                    _buildTab(
+                      icon: Icons.favorite,
+                      index: 3,
+                      theme: _theme,
+                    ),
+                    _buildTab(
+                      icon: Icons.person,
+                      index: 4,
+                      theme: _theme,
+                    ),
                   ],
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+//   Widget _buildTab({
+//     required IconData icon,
+//     required int index,
+//     required ThemeData theme,
+//   }) {
+//     return Tab(
+//       icon: Material(
+//         color: Colors.transparent,
+//         child: InkWell(
+//           borderRadius: BorderRadius.circular(20),
+//           splashColor: theme.primaryColor.withOpacity(0.4),
+//           highlightColor: theme.primaryColor.withOpacity(0.2),
+//           onTap: () {
+//             setState(() {
+//               _tabController.index = index;
+//             });
+//           },
+//           child: Container(
+//             width: 38,
+//             height: 38,
+//             decoration: BoxDecoration(
+//               shape: BoxShape.circle,
+//               color: _tabController.index == index ? theme.primaryColor : null,
+//             ),
+//             child: Center(
+//               child: Container(
+//                 width: 25,
+//                 height: 25,
+//                 decoration: BoxDecoration(
+//                   shape: BoxShape.circle,
+//                   color: _tabController.index != index
+//                       ? theme.colorScheme.secondary
+//                       : null,
+//                 ),
+//                 child: Icon(icon, color: theme.iconTheme.color),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+  Widget _buildTab({
+    required IconData icon,
+    required int index,
+    required ThemeData theme,
+  }) {
+    return Tab(
+      icon: Material(
+        color: Colors.transparent, // Transparent background for ripple effect
+        child: InkWell(
+          borderRadius:
+              BorderRadius.circular(20), // Rounded border for ripple effect
+          splashColor:
+              theme.primaryColor.withOpacity(0.4), // Ripple color when pressed
+          highlightColor:
+              theme.primaryColor.withOpacity(0.2), // Highlight color for press
+          onTap: () {
+            setState(() {
+              _tabController.index = index; // Update tab index on tap
+            });
+          },
+          child: Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _tabController.index == index
+                  ? theme.primaryColor
+                  : null, // Highlight selected tab
+            ),
+            child: Center(
+              child: Container(
+                width: 25,
+                height: 25,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _tabController.index != index
+                      ? theme.colorScheme.secondary
+                      : null,
+                ),
+                child: Icon(icon, color: theme.iconTheme.color),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

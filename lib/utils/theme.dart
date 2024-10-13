@@ -10,6 +10,22 @@ class AppTheme {
   static const Color secondaryColor = Color(0xff232220);
   static const Color goldTextColor = Color(0xffA5957E);
 
+  static const Color secondary = Color(0xFFA5957E);
+  static const Color secondaryContainer = Color(0xFFD3C4B4);
+
+  static const Color primaryContainer = Color(0xFFFAD8B0);
+  static const Color primaryContainerLight = Color(0xFFF6DDC1);
+
+  static Color tertiary =
+      const Color.fromARGB(255, 125, 123, 123).withOpacity(0.75);
+
+  static const Color scaffoldWhite = Color(0xFFF8F8F7);
+
+  static const Color black = Color(0xFF232220);
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color error = Color(0xFFF44336);
+  static const Color successColor = Color(0xFF4CAF50);
+
   //  make text sizes responsive
   static double _responsiveTextSize(double size, BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;

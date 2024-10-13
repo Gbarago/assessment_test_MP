@@ -7,11 +7,11 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Screen'),
+        title: const Text('Chat Screen'),
       ),
       body: const Center(
         child: Text(
-          'This is the Search Screen',
+          'This is the chat Screen',
           style: TextStyle(fontSize: 24),
         ),
       ),
@@ -19,18 +19,18 @@ class ChatScreen extends StatelessWidget {
   }
 }
 
-class NotificationsScreen extends StatelessWidget {
-  const NotificationsScreen({super.key});
+class FavoriteScreen extends StatelessWidget {
+  const FavoriteScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications Screen'),
+        title: const Text('Fave Screen'),
       ),
       body: const Center(
         child: Text(
-          'This is the Notifications Screen',
+          'Fave',
           style: TextStyle(fontSize: 24),
         ),
       ),

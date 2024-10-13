@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:real_estate_abiodun/UI/screens/widgets/home_widgets/slide_widget.dart';
+import 'package:real_estate_abiodun/utils/estensions.dart';
 import 'package:real_estate_abiodun/utils/screen_size.dart';
 import 'package:real_estate_abiodun/utils/theme.dart';
 
@@ -198,11 +200,11 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
     final _theme = Theme.of(context);
 
     // Duration for the animation
-    final duration = Duration(milliseconds: 1500);
+    final duration = Duration(milliseconds: 1200);
 
     return SafeArea(
       child: SizedBox(
-        height: 1070,
+        // height: 1070,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -217,24 +219,35 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
                     style: _theme.textTheme.labelMedium,
                   ),
                   SizedBox(
-                      // width: myScreenWidth(0.58, context),
-                      child: AnimatedPositioned(
-                    duration: const Duration(seconds: 5),
-                    curve: Curves.easeInOut,
-                    left: _slideAnimation.value.dx,
-                    top: _slideAnimation.value.dy,
+                    width: myScreenWidth(0.58, context),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'let\'s select your perfect place',
+                        'let\'s select your',
                         style: _theme.textTheme.titleMedium?.copyWith(
                           color: _theme.textTheme.bodyLarge?.color,
                           height: 1.1,
                           fontWeight: FontWeight.w600,
                         ),
-                      ),
+                      ).fadeInFromBottom(
+                          delay: 1000.ms, animationDuration: 450.ms),
                     ),
-                  )),
+                  ),
+                  SizedBox(
+                    width: myScreenWidth(0.58, context),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'perfect place',
+                        style: _theme.textTheme.titleMedium?.copyWith(
+                          color: _theme.textTheme.bodyLarge?.color,
+                          height: 1.1,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ).fadeInFromBottom(
+                          delay: 1100.ms, animationDuration: 400.ms),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -352,8 +365,6 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
                 ),
               ],
             ),
-            const SizedBox(height: 30),
-            const Expanded(child: ImageGridwidget()),
           ],
         ),
       ),

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:real_estate_abiodun/UI/screens/widgets/search_map_widgets/map-searchbar_widget.dart';
 import 'package:real_estate_abiodun/UI/screens/widgets/search_map_widgets/markers.dart';
+import 'package:real_estate_abiodun/utils/estensions.dart';
+
+import 'widgets/search_map_widgets/map_dialogue.dart';
+import 'widgets/search_map_widgets/map_fab_right.dart';
 
 class SearchScreenTab extends StatefulWidget {
   const SearchScreenTab({super.key});
@@ -11,16 +16,30 @@ class SearchScreenTab extends StatefulWidget {
   _SearchScreenTabState createState() => _SearchScreenTabState();
 }
 
-class _SearchScreenTabState extends State<SearchScreenTab> {
+class _SearchScreenTabState extends State<SearchScreenTab>
+    with SingleTickerProviderStateMixin {
   late GoogleMapController mapController;
+  late AnimationController _animationController;
+
   final LatLng _center =
       const LatLng(37.7749, -122.4194); // Initial map center (San Francisco)
   final Set<Marker> _markers = {};
   String? _mapStyle; // Variable to hold the dark map style
+  bool _isExpanded = true;
 
   @override
   void initState() {
     super.initState();
+
+    _animationController = AnimationController(
+        vsync: this, duration: 700.ms, reverseDuration: 500.ms);
+    _animationController.addStatusListener((listener) {
+      if (listener == AnimationStatus.dismissed) {
+        _setExpandedFalse();
+      } else {
+        _setExpandedTrue();
+      }
+    });
 
     // Load the dark map style from assets
     rootBundle.loadString('assets/map_styles/dark_map.json').then((string) {
@@ -31,6 +50,18 @@ class _SearchScreenTabState extends State<SearchScreenTab> {
 
     // Add markers with chat bubble widgets
     _addMarkers();
+  }
+
+  void _setExpandedFalse() {
+    setState(() {
+      _isExpanded = false;
+    });
+  }
+
+  void _setExpandedTrue() {
+    setState(() {
+      _isExpanded = true;
+    });
   }
 
   // Function to add 6 markers
@@ -88,6 +119,7 @@ class _SearchScreenTabState extends State<SearchScreenTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
           GoogleMap(
             onMapCreated: (GoogleMapController controller) {
@@ -97,14 +129,18 @@ class _SearchScreenTabState extends State<SearchScreenTab> {
               target: _center,
               zoom: 11.0,
             ),
-            // markers: _markers,
-            // Set the style directly in the GoogleMap widget
             style: _mapStyle,
           ),
-          //  const MapSearchBarWidget(),
-          const ListOfMarkersWidget(
-            isExpanded: true,
-          )
+          const ExtendedRightFabBTN(),
+          Positioned(
+            left: 30,
+            bottom: context.sizeHeight(0.11),
+            child: OverlayDialog(
+              animationController: _animationController,
+            ),
+          ),
+          const MapSearchBarWidget(),
+          ListOfMarkersWidget(isExpanded: _isExpanded)
         ],
       ),
     );
