@@ -216,7 +216,7 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
                 children: [
                   Text(
                     'Hi, Marina',
-                    style: _theme.textTheme.labelMedium,
+                    style: _theme.textTheme.bodyLarge,
                   ),
                   SizedBox(
                     width: myScreenWidth(0.58, context),

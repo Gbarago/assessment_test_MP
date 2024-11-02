@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:real_estate_abiodun/utils/estensions.dart';
 import 'package:real_estate_abiodun/utils/screen_size.dart';
 import 'widgets/home_widgets/home_screen_widgets.dart';
+import 'package:animated_marker/animated_marker.dart';
 
 class HomePageTab extends StatefulWidget {
   const HomePageTab({super.key});
@@ -11,11 +15,15 @@ class HomePageTab extends StatefulWidget {
   State<HomePageTab> createState() => _HomePageTabState();
 }
 
-class _HomePageTabState extends State<HomePageTab> {
+class _HomePageTabState extends State<HomePageTab>
+    with SingleTickerProviderStateMixin {
   int _numValue1 = 0;
   int _numValue2 = 0;
   bool _expandText = false;
   bool _hideCircleRow = false;
+  bool overlayExpanded = false;
+  late Animation<double> _animation;
+  late AnimationController _controller;
 
   double _scrollPosition = 0.0;
 
@@ -26,18 +34,23 @@ class _HomePageTabState extends State<HomePageTab> {
     numbersFunction();
     animateWidth();
     hideCircleWidget();
-    exxpand();
+    _controller = AnimationController(
+        vsync: this, duration: 1200.ms, reverseDuration: 500.ms);
+
+    _controller.addStatusListener((listener) {
+      overlayExpanded = true;
+      if (listener == AnimationStatus.dismissed) {}
+    });
+
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+
+    _controller.forward();
+    // exxpand();
 
     super.initState();
-  }
-
-  void exxpand() async {
-    await Future.delayed(Duration(milliseconds: 800));
-    if (mounted) {
-      setState(() {
-        isExpanded = !isExpanded;
-      });
-    }
   }
 
   void numbersFunction() {
@@ -99,11 +112,10 @@ class _HomePageTabState extends State<HomePageTab> {
                 child: Column(
                   children: [
                     const SizedBox(height: 10), // Space before content starts
+
                     Opacity(
                         opacity: (_scrollPosition <= 100)
-                            ? 1.0 -
-                                (_scrollPosition /
-                                    100) // Adjust the opacity based on scroll
+                            ? (1.0 - (_scrollPosition / 100)).clamp(0.0, 1.0)
                             : 0.0,
                         child: const HomeGridWidget()),
                     const SizedBox(height: 30),
@@ -124,7 +136,7 @@ class _HomePageTabState extends State<HomePageTab> {
           Positioned(
             left: 20,
             right: 10,
-            top: 45,
+            top: Platform.isAndroid ? 45 : 60,
             child: SizedBox(
               // color: Colors.red,
               width: size.width * 0.9,
@@ -133,42 +145,46 @@ class _HomePageTabState extends State<HomePageTab> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //  mainAxisSize: MainAxisSize.max,
                 children: [
-                  TweenAnimationBuilder(
-                      tween: Tween<double>(begin: 0.2, end: 1.0),
-                      duration: Duration(milliseconds: 1300),
-                      curve: Curves.easeInOut,
-                      builder: (context, double value, child) {
-                        return Transform.scale(
-                          scale: value,
-                          child: Opacity(
-                            opacity: value,
-                            child: Container(
-                              child: Container(
-                                height: 35,
-                                width: 145,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: _theme.cardColor,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      color: _theme.textTheme.labelSmall?.color,
-                                      size: 15,
-                                    ),
-                                    Text(
-                                      'Saints Petersburg',
-                                      style:
-                                          _theme.textTheme.labelSmall?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        // color: _theme.colorScheme.secondary.withOpacity(0.6),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                  AnimatedBuilder(
+                      animation: _animation,
+                      builder: (context, child) {
+                        return Align(
+                          alignment: Alignment.centerLeft,
+                          child: Transform.scale(
+                            scale: _animation.value,
+                            alignment: Alignment.centerLeft,
+
+                            child: AnimatedContainer(
+                              height: 350,
+                              duration: 800.ms,
+                              width: !overlayExpanded ? 2 : 145,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: _theme.cardColor,
                               ),
+                              child: overlayExpanded &&
+                                      _animation.status ==
+                                          AnimationStatus.completed
+                                  ? Row(
+                                      children: [
+                                        Icon(
+                                          Icons.location_on,
+                                          color: _theme
+                                              .textTheme.labelSmall?.color,
+                                          size: 15,
+                                        ),
+                                        Text(
+                                          'Saints Petersburg',
+                                          style: _theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : null,
                             ),
+                            //  ),
                           ),
                         );
                       }),

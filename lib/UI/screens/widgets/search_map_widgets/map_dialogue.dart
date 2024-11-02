@@ -83,11 +83,14 @@ class _OverlayDialogState extends State<OverlayDialog>
   void _onTap() {
     _onDisplayBorder();
     _controller.forward();
-    setState(() {
-      widget.animationController.forward();
 
-      _overlayPortalController.show();
-    });
+    if (mounted) {
+      setState(() {
+        widget.animationController.forward();
+
+        _overlayPortalController.show();
+      });
+    }
   }
 
   @override
