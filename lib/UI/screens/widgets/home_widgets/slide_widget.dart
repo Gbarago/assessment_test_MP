@@ -23,7 +23,7 @@ class _SlideExpandWidgetState extends State<SlideExpandWidget> {
   @override
   void initState() {
     exxpand();
-    // TODO: implement initState
+
     super.initState();
   }
 
@@ -59,10 +59,10 @@ class _SlideExpandWidgetState extends State<SlideExpandWidget> {
               ? AnimatedPositioned(
                   duration: const Duration(milliseconds: 2500),
                   left: isExpanded
-                      ? myScreenWidth(0.289, context)
+                      ? myScreenWidth(0.28, context)
                       : .0, // Slide the button
                   child: CircleAvatar(
-                    radius: myScreenHeight(0.028, context),
+                    radius: myScreenHeight(0.029, context),
                     backgroundColor: Colors.white,
                     child: Icon(
                       Icons.arrow_forward_ios,
@@ -77,7 +77,7 @@ class _SlideExpandWidgetState extends State<SlideExpandWidget> {
                       ? myScreenWidth(0.79, context)
                       : .0, // Slide the button
                   child: CircleAvatar(
-                    radius: myScreenHeight(0.028, context),
+                    radius: myScreenHeight(0.02678, context),
                     backgroundColor: Colors.white,
                     child: Icon(
                       Icons.arrow_forward_ios,

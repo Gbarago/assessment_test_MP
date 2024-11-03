@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:real_estate_abiodun/utils/estensions.dart';
 import 'package:real_estate_abiodun/utils/image_paths.dart';
+import 'package:real_estate_abiodun/utils/screen_size.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
 class MapSearchBarWidget extends StatelessWidget {
@@ -12,10 +13,11 @@ class MapSearchBarWidget extends StatelessWidget {
     return Align(
         alignment: Alignment.topCenter,
         child: Padding(
-          padding: const EdgeInsets.only(top: 40.0),
+          padding:
+              EdgeInsets.only(top: myScreenHeight(1, context) > 800 ? 40 : 20),
           child: Container(
             height: 80,
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: myScreenWidth(0.8, context),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -25,9 +27,9 @@ class MapSearchBarWidget extends StatelessWidget {
                     child: TextFormField(
                       controller:
                           TextEditingController(text: 'Saint Petersburg'),
-                      style: context.textTheme.titleSmall?.copyWith(
-                        color: context.colorScheme.onSurface,
-                      ),
+                      style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colorScheme.onSurface,
+                          fontWeight: FontWeight.w600),
                       decoration: InputDecoration(
                         fillColor: context.colorScheme.surface,
                         filled: true,

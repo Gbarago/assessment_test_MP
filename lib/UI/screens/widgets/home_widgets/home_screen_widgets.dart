@@ -1,167 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:real_estate_abiodun/UI/screens/widgets/home_widgets/slide_widget.dart';
 import 'package:real_estate_abiodun/utils/estensions.dart';
 import 'package:real_estate_abiodun/utils/screen_size.dart';
 import 'package:real_estate_abiodun/utils/theme.dart';
-
-class ImageGridwidget extends StatelessWidget {
-  const ImageGridwidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        border: Border.all(
-          color: _theme.scaffoldBackgroundColor,
-          width: 10,
-        ),
-        color: _theme.scaffoldBackgroundColor,
-      ),
-      child: Column(
-        children: [
-          AspectRatio(
-            aspectRatio: 5 / 2.5,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage(
-                        'assets/images/home1.jpg',
-                      ),
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    //  color: Colors.blue,
-                  ),
-                ),
-                const Positioned(
-                  right: 10,
-                  left: 10,
-                  bottom: 9,
-                  child: SlideExpandWidget(
-                    title: 'GladKova St, 25',
-                    isverticalContainer: false,
-                    animationDelayTime: 1500,
-                  ),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 2.5 / 5.15,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                image: const DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    'assets/images/home2.jpg',
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.circular(20)),
-                          ),
-                          const Positioned(
-                              right: 10,
-                              left: 10,
-                              bottom: 9,
-                              child: SlideExpandWidget(
-                                title: 'Sedova st, 11',
-                                isverticalContainer: true,
-                                animationDelayTime: 2000,
-                              ))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 2 / 2,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                image: const DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    'assets/images/home4.jpg',
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.circular(20)),
-                          ),
-                          const Positioned(
-                              right: 10,
-                              left: 10,
-                              bottom: 9,
-                              child: SlideExpandWidget(
-                                title: 'Gubina St,, 9',
-                                isverticalContainer: true,
-                                animationDelayTime: 1500,
-                              ))
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    AspectRatio(
-                      aspectRatio: 2 / 2,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                image: const DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: AssetImage(
-                                    'assets/images/home3.jpg',
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.circular(20)),
-                          ),
-                          const Positioned(
-                              right: 10,
-                              left: 10,
-                              bottom: 9,
-                              child: SlideExpandWidget(
-                                title: 'Trefola St, 1',
-                                isverticalContainer: true,
-                                animationDelayTime: 2000,
-                              ))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+import 'package:intl/intl.dart';
 
 class HomeGridWidget extends StatefulWidget {
   const HomeGridWidget({Key? key}) : super(key: key);
@@ -178,15 +20,19 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     );
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(1.0, 0.0),
-      end: Offset(0.0, 0.0),
-    ).animate(_animationController);
-    _animationController.forward();
+
+    if (mounted) {
+      _slideAnimation = Tween<Offset>(
+        begin: Offset(1.0, 0.0),
+        end: Offset(0.0, 0.0),
+      ).animate(_animationController);
+      _animationController.forward();
+    }
   }
 
   @override
@@ -200,7 +46,7 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
     final _theme = Theme.of(context);
 
     // Duration for the animation
-    final duration = Duration(milliseconds: 1200);
+    const duration = Duration(milliseconds: 1200);
 
     return SafeArea(
       child: SizedBox(
@@ -209,49 +55,8 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 70),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Hi, Marina',
-                    style: _theme.textTheme.bodyLarge,
-                  ),
-                  SizedBox(
-                    width: myScreenWidth(0.58, context),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'let\'s select your',
-                        style: _theme.textTheme.titleMedium?.copyWith(
-                          color: _theme.textTheme.bodyLarge?.color,
-                          height: 1.1,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ).fadeInFromBottom(
-                          delay: 1000.ms, animationDuration: 450.ms),
-                    ),
-                  ),
-                  SizedBox(
-                    width: myScreenWidth(0.58, context),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'perfect place',
-                        style: _theme.textTheme.titleMedium?.copyWith(
-                          color: _theme.textTheme.bodyLarge?.color,
-                          height: 1.1,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ).fadeInFromBottom(
-                          delay: 1100.ms, animationDuration: 400.ms),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
+            HomeHeaderTextWidget(theme: _theme),
+            const SizedBox(height: 50),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -279,18 +84,20 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
                                 style: _theme.textTheme.titleSmall,
                               ),
                               SizedBox(height: myScreenWidth(0.09, context)),
-                              // Animated number for "1 034"
                               TweenAnimationBuilder<int>(
                                 tween: IntTween(begin: 0, end: 1034),
-                                duration: Duration(
-                                    milliseconds:
-                                        2500), // You can adjust the duration here
+                                duration: const Duration(milliseconds: 1800),
                                 builder: (context, value, child) {
+                                  final formattedValue =
+                                      NumberFormat("#,##0", "en_US")
+                                          .format(value)
+                                          .replaceAll(",", " ");
+
                                   return Text(
-                                    '$value',
+                                    '$formattedValue',
                                     style:
                                         _theme.textTheme.titleLarge?.copyWith(
-                                      letterSpacing: 1.2,
+                                      letterSpacing: 0.5,
                                     ),
                                   );
                                 },
@@ -332,26 +139,29 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
                                   color: AppTheme.goldTextColor,
                                 ),
                               ),
-                              SizedBox(height: myScreenWidth(0.09, context)),
-                              // Animated number for "2 212"
+                              SizedBox(
+                                height: myScreenWidth(0.09, context),
+                              ),
                               TweenAnimationBuilder<int>(
                                 tween: IntTween(begin: 0, end: 2212),
-                                duration: Duration(
-                                    milliseconds:
-                                        2500), // You can adjust the duration here
+                                duration: const Duration(milliseconds: 1800),
                                 builder: (context, value, child) {
+                                  final formattedValue =
+                                      NumberFormat("#,##0", "en_US")
+                                          .format(value)
+                                          .replaceAll(",", " ");
                                   return Text(
-                                    '$value',
+                                    '$formattedValue',
                                     style:
                                         _theme.textTheme.titleLarge?.copyWith(
                                       color: AppTheme.goldTextColor,
-                                      letterSpacing: 1.2,
+                                      letterSpacing: 0.5,
                                     ),
                                   );
                                 },
                               ),
                               Text(
-                                'Offer',
+                                'Offers',
                                 style: _theme.textTheme.titleSmall?.copyWith(
                                   color: AppTheme.goldTextColor,
                                 ),
@@ -367,6 +177,59 @@ class _HomeGridWidgetState extends State<HomeGridWidget>
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class HomeHeaderTextWidget extends StatelessWidget {
+  const HomeHeaderTextWidget({
+    super.key,
+    required ThemeData theme,
+  }) : _theme = theme;
+
+  final ThemeData _theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Hi, Marina',
+            style: _theme.textTheme.bodyLarge,
+          ),
+          SizedBox(
+            width: myScreenWidth(0.58, context),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'let\'s select your',
+                style: _theme.textTheme.titleMedium?.copyWith(
+                  color: _theme.textTheme.bodyLarge?.color,
+                  height: 1.1,
+                  fontWeight: FontWeight.w600,
+                ),
+              ).fadeInFromBottom(delay: 1000.ms, animationDuration: 450.ms),
+            ),
+          ),
+          SizedBox(
+            width: myScreenWidth(0.58, context),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'perfect place',
+                style: _theme.textTheme.titleMedium?.copyWith(
+                  color: _theme.textTheme.bodyLarge?.color,
+                  height: 1.1,
+                  fontWeight: FontWeight.w600,
+                ),
+              ).fadeInFromBottom(delay: 1100.ms, animationDuration: 400.ms),
+            ),
+          ),
+        ],
       ),
     );
   }

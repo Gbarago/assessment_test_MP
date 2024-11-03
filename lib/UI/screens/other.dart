@@ -26,11 +26,11 @@ class FavoriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Fave Screen'),
+        title: const Text('Favorite Screen'),
       ),
       body: const Center(
         child: Text(
-          'Fave',
+          'This is the Favorite Screen',
           style: TextStyle(fontSize: 24),
         ),
       ),

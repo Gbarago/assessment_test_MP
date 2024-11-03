@@ -88,7 +88,7 @@ class AppTheme {
           ),
           labelSmall: TextStyle(
             color: goldTextColor,
-            fontSize: _responsiveTextSize(11, context),
+            fontSize: _responsiveTextSize(10, context),
           ),
           labelMedium: TextStyle(
             color: goldTextColor,

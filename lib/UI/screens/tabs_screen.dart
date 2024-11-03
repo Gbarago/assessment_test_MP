@@ -3,6 +3,8 @@ import 'package:real_estate_abiodun/UI/screens/home_screen.dart';
 import 'package:real_estate_abiodun/UI/screens/other.dart';
 import 'package:real_estate_abiodun/UI/screens/search_screen.dart';
 import 'package:real_estate_abiodun/utils/estensions.dart';
+import 'package:real_estate_abiodun/utils/image_paths.dart';
+import 'package:svg_flutter/svg_flutter.dart';
 
 import 'widgets/animations/inkresponse.dart';
 
@@ -87,7 +89,7 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
   }
 
   void _startNavBarSlideAnimation() async {
-    await Future.delayed(Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 4));
     _navBarAnimationController.forward(from: 0.0); // Start the animation
   }
 
@@ -123,11 +125,11 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
             physics: const NeverScrollableScrollPhysics(), // Disable swipe
             key: ValueKey<int>(_tabController.index),
             controller: _tabController,
-            children: [
+            children: const [
               SearchScreenTab(),
               ChatScreen(),
               HomePageTab(),
-              SizedBox(),
+              FavoriteScreen(),
               ProfileScreen(),
             ],
           ),
@@ -150,27 +152,27 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
                   indicatorPadding: EdgeInsets.zero,
                   tabs: [
                     _buildTab(
-                      icon: Icons.search_sharp,
+                      icon: ImagesPaths.search,
                       index: 0,
                       theme: _theme,
                     ),
                     _buildTab(
-                      icon: Icons.chat_bubble,
+                      icon: ImagesPaths.chat,
                       index: 1,
                       theme: _theme,
                     ),
                     _buildTab(
-                      icon: Icons.home,
+                      icon: ImagesPaths.home,
                       index: 2,
                       theme: _theme,
                     ),
                     _buildTab(
-                      icon: Icons.favorite,
+                      icon: ImagesPaths.heart,
                       index: 3,
                       theme: _theme,
                     ),
                     _buildTab(
-                      icon: Icons.person,
+                      icon: ImagesPaths.profile,
                       index: 4,
                       theme: _theme,
                     ),
@@ -184,97 +186,19 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
     );
   }
 
-//   Widget _buildTab({
-//     required IconData icon,
-//     required int index,
-//     required ThemeData theme,
-//   }) {
-//     return Tab(
-//       icon: Material(
-//         color: Colors.transparent,
-//         child: InkWell(
-//           borderRadius: BorderRadius.circular(20),
-//           splashColor: theme.primaryColor.withOpacity(0.4),
-//           highlightColor: theme.primaryColor.withOpacity(0.2),
-//           onTap: () {
-//             setState(() {
-//               _tabController.index = index;
-//             });
-//           },
-//           child: Container(
-//             width: 38,
-//             height: 38,
-//             decoration: BoxDecoration(
-//               shape: BoxShape.circle,
-//               color: _tabController.index == index ? theme.primaryColor : null,
-//             ),
-//             child: Center(
-//               child: Container(
-//                 width: 25,
-//                 height: 25,
-//                 decoration: BoxDecoration(
-//                   shape: BoxShape.circle,
-//                   color: _tabController.index != index
-//                       ? theme.colorScheme.secondary
-//                       : null,
-//                 ),
-//                 child: Icon(icon, color: theme.iconTheme.color),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
   Widget _buildTab({
-    required IconData icon,
+    required String icon,
     required int index,
     required ThemeData theme,
   }) {
     return Tab(
       icon: Material(
-        color: Colors.transparent, // Transparent background for ripple effect
-        child:
-            //
-            // InkWell(
-            //   borderRadius:
-            //       BorderRadius.circular(20), // Rounded border for ripple effect
-            //   splashColor:
-            //       theme.primaryColor.withOpacity(0.4), // Ripple color when pressed
-            //   highlightColor:
-            //       theme.primaryColor.withOpacity(0.2), // Highlight color for press
-            //   onTap: () {
-            //     setState(() {
-            //       _tabController.index = index; // Update tab index on tap
-            //     });
-            //   },
-            //   child: Container(
-            //     width: 38,
-            //     height: 38,
-            //     decoration: BoxDecoration(
-            //       shape: BoxShape.circle,
-            //       color: _tabController.index == index
-            //           ? theme.primaryColor
-            //           : null, // Highlight selected tab
-            //     ),
-            //     child: Center(
-            //       child: Container(
-            //         width: 25,
-            //         height: 25,
-            //         decoration: BoxDecoration(
-            //           shape: BoxShape.circle,
-            //           color: _tabController.index != index
-            //               ? theme.colorScheme.secondary
-            //               : null,
-            //         ),
-
-            InkResponseWidget(
+        color: Colors.transparent,
+        child: InkResponseWidget(
           index: index,
           onTap: () {
             setState(() {
-              _tabController.index = index; // Update tab index on tap
+              _tabController.index = index;
             });
 
             _onTap();
@@ -290,18 +214,17 @@ class _FloatingNavBarWithTabsState extends State<FloatingNavBarWithTabs>
                 : _tabController.index == 0
                     ? Colors.black26
                     : null,
-            //context.colorScheme.onSurface,
             shape: BoxShape.circle,
             border: _onHideBorder && _tabController.index == index
                 ? Border.all(color: context.colorScheme.surface, width: 1)
                 : null,
           ),
-
-          child: Icon(icon, color: theme.iconTheme.color),
-
-          ///   ),
-          //  ),
-          // ),
+          child: Center(
+            child: SvgPicture.asset(
+              icon,
+              color: theme.iconTheme.color,
+            ),
+          ),
         ),
       ),
     );

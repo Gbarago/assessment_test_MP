@@ -84,13 +84,12 @@ class _OverlayDialogState extends State<OverlayDialog>
     _onDisplayBorder();
     _controller.forward();
 
-    if (mounted) {
-      setState(() {
-        widget.animationController.forward();
+    if (mounted) {}
+    setState(() {
+      widget.animationController.forward();
 
-        _overlayPortalController.show();
-      });
-    }
+      _overlayPortalController.show();
+    });
   }
 
   @override
@@ -174,7 +173,7 @@ class _OverlayDialogState extends State<OverlayDialog>
                   onHideBorder: _onHideBorder,
                   strokeWidth: 3,
                   onTap: () {
-                    _onTap();
+                    if (index == 0) _onTap();
                     setState(() {
                       iconIndex = index;
                     });

@@ -4,12 +4,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:real_estate_abiodun/utils/estensions.dart';
 
 class ListOfMarkersWidget extends StatefulWidget {
-  const ListOfMarkersWidget(
-      {super.key, required this.isExpanded, required this.color});
+  ListOfMarkersWidget(
+      {super.key,
+      required this.isExpanded,
+      required this.color,
+      required this.markerTitle});
 
   final bool isExpanded;
   final Color color;
-
+  final String markerTitle;
   @override
   State<ListOfMarkersWidget> createState() => _ListOfMarkersWidgetState();
 }
@@ -27,13 +30,14 @@ class _ListOfMarkersWidgetState extends State<ListOfMarkersWidget>
       parent: _controller,
       curve: Curves.easeInOut,
     );
-
-    _controller.forward();
+    if (mounted) {
+      _controller.forward();
+    }
   }
 
   @override
   void dispose() {
-    //  _controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -52,7 +56,7 @@ class _ListOfMarkersWidgetState extends State<ListOfMarkersWidget>
                 alignment: Alignment.bottomLeft,
                 child: AnimatedContainer(
                   height: 40,
-                  duration: 800.ms,
+                  duration: 600.ms,
                   width: !overlayExpanded ? 35 : 75,
                   padding: EdgeInsets.only(
                     left: !overlayExpanded ? 6 : 11,
@@ -75,15 +79,7 @@ class _ListOfMarkersWidgetState extends State<ListOfMarkersWidget>
                         )
                       : Center(
                           child: AutoSizeText(
-                            // [
-                            //   '10,3 mn ₽',
-                            //   '11 mn ₽',
-                            //   '13,3 mn ₽',
-                            //   '7,8 mn ₽',
-                            //   '8,5 mn ₽',
-                            //   '6,95 mn ₽'
-                            // ][index],
-                            ' 10,3 mn ₽',
+                            widget.markerTitle,
                             style: context.textTheme.bodySmall?.copyWith(
                                 fontSize: 10,
                                 color: context.colorScheme.surface,

@@ -8,7 +8,7 @@ class ExtendedRightFabBTN extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
+    //  final _theme = Theme.of(context);
 
     return Positioned(
       bottom: context.sizeHeight(0.11),

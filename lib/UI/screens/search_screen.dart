@@ -20,7 +20,7 @@ class _SearchScreenTabState extends State<SearchScreenTab>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = true;
   late AnimationController _animationController;
-
+  bool _isInit = true; // check if the markers are loaded for the first time
   Set<Marker> _markers = {};
   final List<LatLng> markerPositions = const [
     LatLng(37.7749, -122.4193),
@@ -29,7 +29,6 @@ class _SearchScreenTabState extends State<SearchScreenTab>
     LatLng(37.7749, -122.4294),
     LatLng(37.7749, -122.4094),
     LatLng(37.7849, -122.4294),
-    LatLng(37.7649, -122.4094),
   ];
   @override
   void initState() {
@@ -46,24 +45,43 @@ class _SearchScreenTabState extends State<SearchScreenTab>
         });
       }
     });
-
-    _createMarkers();
-
+    _initializeMarkersWithDelay();
     super.initState();
   }
 
+  final List<String> titles = [
+    '10,3 mn ₽',
+    '11 mn ₽',
+    '13,3 mn ₽',
+    '7,8 mn ₽',
+    '8,5 mn ₽',
+    '6,95 mn ₽'
+  ];
+
+  Future<void> _initializeMarkersWithDelay() async {
+    // Delay for  seconds (2000 milliseconds)
+    await Future.delayed(const Duration(milliseconds: 920));
+    if (mounted) {
+      setState(() {
+        _markers = Set.from(_createMarkers());
+        _isInit = false;
+      });
+    }
+  }
+
   List<Marker> _createMarkers() {
-    return markerPositions.map((position) {
+    return List<Marker>.generate(markerPositions.length, (index) {
       return Marker(
-        point: position,
+        point: markerPositions[index],
         width: 75,
         height: 60,
         child: ListOfMarkersWidget(
           isExpanded: _isExpanded,
           color: AppTheme.primaryColor,
+          markerTitle: 'Marker ${index + 1}',
         ),
       );
-    }).toList(); // Convert to list to return
+    });
   }
 
   @override
@@ -80,13 +98,11 @@ class _SearchScreenTabState extends State<SearchScreenTab>
               TileLayer(
                 urlTemplate:
                     "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-                subdomains: ['a', 'b', 'c'],
+                subdomains: const ['a', 'b', 'c'],
                 retinaMode: true, // Set retina mode here
               ),
-
               MarkerLayer(
-                  markers:
-                      _createMarkers()), // Call _createMarkers to render all markers
+                  markers: _isInit ? _markers.toList() : _createMarkers()),
             ],
           ),
           const ExtendedRightFabBTN(),

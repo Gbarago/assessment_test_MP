@@ -1,12 +1,10 @@
 import 'dart:io';
-
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:real_estate_abiodun/utils/estensions.dart';
 import 'package:real_estate_abiodun/utils/screen_size.dart';
 import 'widgets/home_widgets/home_screen_widgets.dart';
-import 'package:animated_marker/animated_marker.dart';
+import 'widgets/home_widgets/image_grid-widget.dart';
 
 class HomePageTab extends StatefulWidget {
   const HomePageTab({super.key});
@@ -46,35 +44,47 @@ class _HomePageTabState extends State<HomePageTab>
       parent: _controller,
       curve: Curves.easeInOut,
     );
-
-    _controller.forward();
-    // exxpand();
+    if (mounted) {
+      _controller.forward();
+    }
 
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void numbersFunction() {
     Future.delayed(const Duration(milliseconds: 1800), () {
-      setState(() {
-        _numValue1 = 1034;
-        _numValue2 = 2212;
-      });
+      if (mounted) {
+        setState(() {
+          _numValue1 = 1034;
+          _numValue2 = 2212;
+        });
+      }
     });
   }
 
   void animateWidth() {
     Future.delayed(const Duration(milliseconds: 1200), () {
-      setState(() {
-        _expandText = true;
-      });
+      if (mounted) {
+        setState(() {
+          _expandText = true;
+        });
+      }
     });
   }
 
   void hideCircleWidget() {
     Future.delayed(const Duration(milliseconds: 2600), () {
-      setState(() {
-        _hideCircleRow = true;
-      });
+      if (mounted) {
+        setState(() {
+          _hideCircleRow = true;
+        });
+      }
     });
   }
 
@@ -96,40 +106,47 @@ class _HomePageTabState extends State<HomePageTab>
                   _theme.primaryColor.withOpacity(0.1),
                   _theme.primaryColor.withOpacity(0.02),
                 ],
-                stops: [0.0, 0.5, 1.0],
+                stops: const [0.0, 0.5, 1.0],
               ),
             ),
             child: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
-                if (scrollNotification.metrics.pixels is double) {
-                  setState(() {
-                    _scrollPosition = scrollNotification.metrics.pixels;
-                  });
-                }
+                setState(() {
+                  _scrollPosition = scrollNotification.metrics.pixels;
+                });
                 return true;
               },
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(height: 10), // Space before content starts
+                    const SizedBox(height: 12), // Space before content starts
 
                     Opacity(
                         opacity: (_scrollPosition <= 100)
                             ? (1.0 - (_scrollPosition / 100)).clamp(0.0, 1.0)
                             : 0.0,
                         child: const HomeGridWidget()),
-                    const SizedBox(height: 30),
-
-                    Offstage(
-                      offstage: !_hideCircleRow,
-                      child: const ImageGridwidget().slideInFromBottom(
-                        delay: 2300.ms,
-                        animationDuration: 1200.ms,
-                        begin: 1,
-                      ),
-                    ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 1,
+            right: 1,
+            top: Platform.isAndroid ? 207 : 250,
+            child: Offstage(
+              offstage: !_hideCircleRow,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: const ImageGridwidget().slideInFromBottom(
+                      delay: 1850.ms,
+                      animationDuration: 1150.ms,
+                      begin: 1,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -138,7 +155,6 @@ class _HomePageTabState extends State<HomePageTab>
             right: 10,
             top: Platform.isAndroid ? 45 : 60,
             child: SizedBox(
-              // color: Colors.red,
               width: size.width * 0.9,
               height: 50,
               child: Row(
@@ -155,7 +171,7 @@ class _HomePageTabState extends State<HomePageTab>
                             alignment: Alignment.centerLeft,
 
                             child: AnimatedContainer(
-                              height: 350,
+                              height: 40,
                               duration: 800.ms,
                               width: !overlayExpanded ? 2 : 145,
                               decoration: BoxDecoration(
